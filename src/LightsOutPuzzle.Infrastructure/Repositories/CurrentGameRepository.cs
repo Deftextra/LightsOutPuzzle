@@ -36,10 +36,7 @@ namespace LightsOutPuzzle.Infrastructure.Repositories
 
         public Board CreateNewCurrentGame(string dimensions)
         {
-            if (_currentGame == null)
-            {
-                _currentGame = new CurrentLightPuzzleGameDto(dimensions);
-            }
+            _currentGame = new CurrentLightPuzzleGameDto(dimensions);
 
             return MapToBoard();
         }

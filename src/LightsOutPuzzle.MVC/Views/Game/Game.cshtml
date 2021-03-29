@@ -1,0 +1,55 @@
+﻿@model LightPuzzleGameViewModel
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+@if (!Model.IsCompleted)
+{
+    @await Html.PartialAsync("_PartialPuzzleBoard", Model)
+    ;
+}
+else
+{
+    <p class="text-center">
+        <span class="display-1">
+            Congratulations!
+        </span>
+    </p>
+
+    <p class="text-center">
+        <span class="display-4">
+            You have successfully completed the game.
+        </span>
+    </p>
+}
+
+<div class="row justify-content-center mt-2">
+    <a class="giveUpButton col-2 text-center"
+       asp-action="StartGame">
+        Restart Game
+    </a>
+</div>
+
+
+<style>
+    a {
+      color: white;
+      padding: 1em 1.5em;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+    .light {
+      background-color: black;
+      flex: 1 1 0;
+      margin: 1px;
+    }
+    .isOn {
+        background-color: yellow;
+    }
+    
+    .giveUpButton {
+        background-color: green;
+    }
+</style>

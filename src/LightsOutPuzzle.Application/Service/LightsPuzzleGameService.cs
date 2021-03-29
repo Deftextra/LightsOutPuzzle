@@ -35,5 +35,10 @@ namespace LightsOutPuzzle.Application.Service
         {
             return _currentGameRepository.CreateNewCurrentGame(dimensions);
         }
+        
+        public Board RestartGame(string dimension)
+        {
+            return _currentGameRepository.CreateNewCurrentGame(dimension);
+        }
     }
 }

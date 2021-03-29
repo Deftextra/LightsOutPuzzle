@@ -21,12 +21,11 @@ namespace LightsOutPuzzle.MVC.Controllers
         
         public IActionResult StartGame()
         {
-            try
-            {
+            try {
                 var game = _lightsPuzzleGameService.StartNewGame("5x5");
                 var viewGame = MapToViewModel(game);
                 
-                return View(viewGame);
+                return View("Game",viewGame);
             }
             catch(Exception ex)
             {
@@ -48,7 +47,7 @@ namespace LightsOutPuzzle.MVC.Controllers
 
                 var toggledBoard = _lightsPuzzleGameService.ToggleAdjacentLights(cell);
 
-                return View(MapToViewModel(toggledBoard));
+                return View("Game",MapToViewModel(toggledBoard));
             }
             catch (Exception ex)
             {
