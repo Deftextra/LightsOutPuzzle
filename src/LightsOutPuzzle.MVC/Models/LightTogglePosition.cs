@@ -8,5 +8,7 @@ namespace LightsOutPuzzle.MVC.Models
         public int PositionX { get; set; }
         [Required]
         public int PositionY { get; set; }
+        [Required]
+        public bool IsOn { get; set; }
     }
 }

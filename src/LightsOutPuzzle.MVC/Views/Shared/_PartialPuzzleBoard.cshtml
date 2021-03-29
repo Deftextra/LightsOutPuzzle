@@ -1,0 +1,35 @@
+﻿@model LightPuzzleGameViewModel
+
+
+@foreach (var rowLights in Model.Lights)
+{
+    <div class="row">
+        @foreach (var light in rowLights)
+        {
+            <a
+                class="light @(light.IsOn ? "isOn" : "isOff")"
+                asp-action="ToggleAdjacentLights"
+                asp-route-positionX="@(light.PositionX)"
+                asp-route-positionY="@(light.PositionY)"
+                asp-route-isOn="@(light.IsOn)">
+            </a>
+        }
+    </div>
+}
+
+
+<style>
+    .light {
+      background-color: black;
+      color: white;
+      padding: 1em 1.5em;
+      text-decoration: none;
+      text-transform: uppercase;
+      flex: 1 1 0;
+      margin: 1px;
+    }
+    .isOn {
+        background-color: yellow;
+    }
+</style>
+

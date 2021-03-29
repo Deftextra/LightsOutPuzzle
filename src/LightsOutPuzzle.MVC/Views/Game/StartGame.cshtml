@@ -1,8 +1,9 @@
-﻿@model TModel
+﻿@model LightPuzzleGameViewModel
 
 @{
     ViewBag.Title = "title";
     Layout = "_Layout";
 }
 
-<h2>title</h2>
+@await Html.PartialAsync("_PartialPuzzleBoard",Model);
+
