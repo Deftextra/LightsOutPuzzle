@@ -32,7 +32,7 @@ namespace LightsOutPuzzle.Infrastructure.Models
                     $"pressed light at position {light.PositionX}x{light.PositionY} is out of Sync");
             }
 
-            light.Toggle();
+            Lights[light.PositionX][light.PositionY].Toggle();
             ToggleLeftLight(light);
             ToggleRightLight(light);
             ToggleTopLight(light); 
@@ -106,7 +106,7 @@ namespace LightsOutPuzzle.Infrastructure.Models
 
         private void ToggleRightLight(CurrentLightDto light)
         {
-            if (light.PositionX != NumColumns)
+            if (light.PositionX != NumColumns - 1)
             {
                 Lights[light.PositionX + 1][light.PositionY].Toggle();
             }
@@ -123,13 +123,20 @@ namespace LightsOutPuzzle.Infrastructure.Models
 
         private void ToggleBottomLight(CurrentLightDto light)
         {
-            if (light.PositionY != NumRows)
+            if (light.PositionY != NumRows - 1)
             {
                 Lights[light.PositionX][light.PositionY + 1].Toggle();
             }
         }
-        
 
+        /// <summary>
+        ///  Any initial pattern of lights on is solvable.
+        /// Therefore, we can create a random board.
+        /// See https://en.wikipedia.org/wiki/Lights_Out_(game)
+        /// </summary>
+        /// <param name="positionX"></param>
+        /// <param name="positionY"></param>
+        /// <returns></returns>
         private CurrentLightDto CreateLightInRandomState(int positionX, int positionY)
         {
             var light = new CurrentLightDto();
@@ -137,10 +144,14 @@ namespace LightsOutPuzzle.Infrastructure.Models
 
             // Set position on the board.
             light.PositionX = positionX;
-            light.PositionX = positionY;
+            light.PositionY = positionY;
 
             // Toggle light Randomly.
-            if (rnd.Next() > 0.5) light.Toggle();
+            if (rnd.Next(0, 2) == 1)
+            {
+                light.Toggle();
+            }
+            
             return light;
         }
     }

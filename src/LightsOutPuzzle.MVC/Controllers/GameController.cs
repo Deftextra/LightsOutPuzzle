@@ -6,6 +6,7 @@ using LightsOutPuzzle.Domain.ValueObjects;
 using LightsOutPuzzle.MVC.Models;
 using LightsOutPuzzle.MVC.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 
 namespace LightsOutPuzzle.MVC.Controllers
 {
@@ -26,7 +27,6 @@ namespace LightsOutPuzzle.MVC.Controllers
                 var viewGame = MapToViewModel(game);
                 
                 return View(viewGame);
-
             }
             catch(Exception ex)
             {
@@ -34,11 +34,27 @@ namespace LightsOutPuzzle.MVC.Controllers
             }
         }
 
+        [HttpGet]
         public IActionResult ToggleAdjacentLights(LightTogglePosition position)
         {
-            return View();
-        }
+            try
+            {
+                var cell = new Cell()
+                {
+                    PositionX = position.PositionX,
+                    PositionY = position.PositionY,
+                    Value = position.IsOn ? LightValue.On : LightValue.Off
+                };
 
+                var toggledBoard = _lightsPuzzleGameService.ToggleAdjacentLights(cell);
+
+                return View(MapToViewModel(toggledBoard));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         private LightPuzzleGameViewModel MapToViewModel(Board board)
         {
