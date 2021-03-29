@@ -11,4 +11,4 @@ Run the following command from the LightsOutPuzzle.MVC project folder to start t
 ```bash
 > dotnet run
 ```
-Navigate to https://localhost:5001 on any prefered web browser to intract with the UI.
+Navigate to https://localhost:5001 on any prefered web browser to interact with the UI.
