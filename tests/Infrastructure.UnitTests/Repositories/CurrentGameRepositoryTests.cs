@@ -43,6 +43,5 @@ namespace Infrastructure.UnitTests.Repositories
             // Assert
             result.Should().NotBeNull();
         }
-
     }
 }

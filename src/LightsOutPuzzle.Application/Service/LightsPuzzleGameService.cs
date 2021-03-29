@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using LightsOutPuzzle.Application.Interfaces;
+﻿using LightsOutPuzzle.Application.Interfaces;
 using LightsOutPuzzle.Domain.Entities;
 using LightsOutPuzzle.Domain.Interfaces.Repositories;
 using LightsOutPuzzle.Domain.ValueObjects;
@@ -35,7 +34,7 @@ namespace LightsOutPuzzle.Application.Service
         {
             return _currentGameRepository.CreateNewCurrentGame(dimensions);
         }
-        
+
         public Board RestartGame(string dimension)
         {
             return _currentGameRepository.CreateNewCurrentGame(dimension);

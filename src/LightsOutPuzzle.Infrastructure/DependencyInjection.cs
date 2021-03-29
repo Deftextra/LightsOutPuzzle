@@ -1,5 +1,4 @@
-﻿using LightsOutPuzzle.Application;
-using LightsOutPuzzle.Application.Interfaces;
+﻿using LightsOutPuzzle.Application.Interfaces;
 using LightsOutPuzzle.Application.Service;
 using LightsOutPuzzle.Domain.Interfaces.Repositories;
 using LightsOutPuzzle.Infrastructure.Repositories;
@@ -17,6 +16,5 @@ namespace LightsOutPuzzle.Infrastructure
 
             return service;
         }
-        
     }
 }

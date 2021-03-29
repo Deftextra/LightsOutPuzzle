@@ -14,14 +14,14 @@ namespace LightsOutPuzzle.Infrastructure.Repositories
 
         public Board ToggleAdjacentLights(Cell light)
         {
-            var currentLight = new CurrentLightDto()
+            var currentLight = new CurrentLightDto
             {
                 Id = light.Id,
                 PositionX = light.PositionX,
                 PositionY = light.PositionY,
                 Value = light.Value
             };
-            
+
             _currentGame.ToggleAdjacentLights(currentLight);
 
             return MapToBoard();
@@ -29,7 +29,10 @@ namespace LightsOutPuzzle.Infrastructure.Repositories
 
         public Board GetCurrentGame()
         {
-            if (_currentGame == null) throw new Exception("Game Does not exist. Please create a game");
+            if (_currentGame == null)
+            {
+                throw new Exception("Game Does not exist. Please create a game");
+            }
 
             return MapToBoard();
         }
@@ -54,7 +57,7 @@ namespace LightsOutPuzzle.Infrastructure.Repositories
                         PositionY = light.PositionY
                     }));
 
-            return new Board()
+            return new Board
             {
                 Id = _currentGame.Id,
                 IsCompleted = _currentGame.CheckIfComplete(),

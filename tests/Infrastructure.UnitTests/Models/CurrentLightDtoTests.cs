@@ -6,7 +6,7 @@ namespace Infrastructure.UnitTests.Models
 {
     public class CurrentLightDtoTests
     {
-       [Fact]
+        [Fact]
         public void TurnOn_ShouldTurnLightOn()
         {
             // Arrange
@@ -16,6 +16,7 @@ namespace Infrastructure.UnitTests.Models
             // Assert
             light.IsOn().Should().BeTrue();
         }
+
         [Fact]
         public void TurnOff_ShouldTurnLightOff()
         {
@@ -26,7 +27,7 @@ namespace Infrastructure.UnitTests.Models
             // Assert
             light.IsOn().Should().BeFalse();
         }
-        
+
         [Fact]
         public void Toggle_ShouldTurnLightOff_WhenOn()
         {
@@ -38,7 +39,7 @@ namespace Infrastructure.UnitTests.Models
             // Assert 
             light.IsOn().Should().BeTrue();
         }
-        
+
         [Fact]
         public void Toggle_ShouldTurnLightOn_WhenOff()
         {
@@ -50,6 +51,5 @@ namespace Infrastructure.UnitTests.Models
             // Assert 
             light.IsOn().Should().BeTrue();
         }
-        
     }
 }

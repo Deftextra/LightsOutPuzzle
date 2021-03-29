@@ -35,18 +35,16 @@ namespace LightsOutPuzzle.Infrastructure.Models
             Lights[light.PositionX][light.PositionY].Toggle();
             ToggleLeftLight(light);
             ToggleRightLight(light);
-            ToggleTopLight(light); 
+            ToggleTopLight(light);
             ToggleBottomLight(light);
         }
 
         public bool CheckIfComplete()
         {
             foreach (var rowLights in Lights)
+            foreach (var light in rowLights)
             {
-                foreach (var light in rowLights)
-                {
-                    IsComplete &= !light.IsOn();
-                }
+                IsComplete &= !light.IsOn();
             }
 
             return IsComplete;
@@ -63,13 +61,17 @@ namespace LightsOutPuzzle.Infrastructure.Models
             var splitDimensions = dimension.Split('x');
 
             if (splitDimensions.Length != 2)
+            {
                 throw new ArgumentException($"{nameof(CurrentLightPuzzleGameDto)} Should be two dimensional");
+            }
 
             var parsedDimensions = splitDimensions.Select(int.Parse)
                 .ToList();
 
             if (parsedDimensions[0] != parsedDimensions[1])
+            {
                 throw new ArgumentException($"{nameof(CurrentLightPuzzleGameDto)} dimension Should be square");
+            }
 
             NumRows = parsedDimensions[0];
             NumColumns = parsedDimensions[1];
@@ -78,7 +80,7 @@ namespace LightsOutPuzzle.Infrastructure.Models
         private void ConstructLightBoard()
         {
             Lights = new CurrentLightDto[NumRows][];
-            for (int i = 0; i < NumRows; ++i)
+            for (var i = 0; i < NumRows; ++i)
             {
                 Lights[i] = new CurrentLightDto[NumColumns];
             }
@@ -86,12 +88,10 @@ namespace LightsOutPuzzle.Infrastructure.Models
 
         private void PopulateLightBoard()
         {
-            for (int i = 0; i < NumRows; i++)
+            for (var i = 0; i < NumRows; i++)
+            for (var j = 0; j < NumColumns; j++)
             {
-                for (int j = 0; j < NumColumns; j++)
-                {
-                    Lights[i][j] = CreateLightInRandomState(i, j);
-                }
+                Lights[i][j] = CreateLightInRandomState(i, j);
             }
         }
 
@@ -101,7 +101,6 @@ namespace LightsOutPuzzle.Infrastructure.Models
             {
                 Lights[light.PositionX - 1][light.PositionY].Toggle();
             }
-            
         }
 
         private void ToggleRightLight(CurrentLightDto light)
@@ -110,7 +109,6 @@ namespace LightsOutPuzzle.Infrastructure.Models
             {
                 Lights[light.PositionX + 1][light.PositionY].Toggle();
             }
-            
         }
 
         private void ToggleTopLight(CurrentLightDto light)
@@ -130,9 +128,9 @@ namespace LightsOutPuzzle.Infrastructure.Models
         }
 
         /// <summary>
-        ///  Any initial pattern of lights on is solvable.
-        /// Therefore, we can create a random board.
-        /// See https://en.wikipedia.org/wiki/Lights_Out_(game)
+        ///     Any initial pattern of lights on is solvable.
+        ///     Therefore, we can create a random board.
+        ///     See https://en.wikipedia.org/wiki/Lights_Out_(game)
         /// </summary>
         /// <param name="positionX"></param>
         /// <param name="positionY"></param>
@@ -151,7 +149,7 @@ namespace LightsOutPuzzle.Infrastructure.Models
             {
                 light.Toggle();
             }
-            
+
             return light;
         }
     }

@@ -6,28 +6,28 @@ using LightsOutPuzzle.Domain.ValueObjects;
 using LightsOutPuzzle.MVC.Models;
 using LightsOutPuzzle.MVC.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Net.Http.Headers;
 
 namespace LightsOutPuzzle.MVC.Controllers
 {
     public class GameController : Controller
     {
         private readonly ILightsPuzzleGameService _lightsPuzzleGameService;
-        
+
         public GameController(ILightsPuzzleGameService lightsPuzzleGameService)
         {
             _lightsPuzzleGameService = lightsPuzzleGameService;
         }
-        
+
         public IActionResult StartGame()
         {
-            try {
+            try
+            {
                 var game = _lightsPuzzleGameService.StartNewGame("5x5");
                 var viewGame = MapToViewModel(game);
-                
-                return View("Game",viewGame);
+
+                return View("Game", viewGame);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -38,7 +38,7 @@ namespace LightsOutPuzzle.MVC.Controllers
         {
             try
             {
-                var cell = new Cell()
+                var cell = new Cell
                 {
                     PositionX = position.PositionX,
                     PositionY = position.PositionY,
@@ -47,7 +47,7 @@ namespace LightsOutPuzzle.MVC.Controllers
 
                 var toggledBoard = _lightsPuzzleGameService.ToggleAdjacentLights(cell);
 
-                return View("Game",MapToViewModel(toggledBoard));
+                return View("Game", MapToViewModel(toggledBoard));
             }
             catch (Exception ex)
             {
@@ -58,16 +58,16 @@ namespace LightsOutPuzzle.MVC.Controllers
         private LightPuzzleGameViewModel MapToViewModel(Board board)
         {
             var viewLights = board.Lights.Select(cells => cells.Select(cell =>
-                    new LightViewModel()
+                    new LightViewModel
                     {
                         IsOn = cell.Value == LightValue.On,
                         PositionX = cell.PositionX,
-                        PositionY = cell.PositionY,
+                        PositionY = cell.PositionY
                     }
                 )
             );
 
-            return new LightPuzzleGameViewModel()
+            return new LightPuzzleGameViewModel
             {
                 Lights = viewLights,
                 IsCompleted = board.IsCompleted

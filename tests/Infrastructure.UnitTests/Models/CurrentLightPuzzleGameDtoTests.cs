@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text.Json.Serialization;
 using FluentAssertions;
 using LightsOutPuzzle.Infrastructure.Models;
 using Xunit;
@@ -77,31 +76,30 @@ namespace Infrastructure.UnitTests.Models
             // Assert
             expectYDimensionValue.Should().Be(game.NumColumns);
         }
-        
+
         [Theory]
         [InlineData("5x5")]
         public void ToggleAdjacentLights_ShouldThrow_WhenViewAndModelOutOfSync(string dimensions)
         {
             // Arrange
             var sut = new CurrentLightPuzzleGameDto(dimensions);
-            var light = new CurrentLightDto()
+            var light = new CurrentLightDto
             {
                 PositionX = 2,
                 PositionY = 2
             };
             light.TurnOff();
             sut.Lights[2][2].TurnOn();
-            
-             // Act
-             Action toggle = () => sut.ToggleAdjacentLights(light);
-             
-             // Assert
-             toggle.Should()
-                 .Throw<ArgumentException>().WithMessage(
-                     $"pressed light at position {light.PositionX}x{light.PositionY} is out of Sync");
 
+            // Act
+            Action toggle = () => sut.ToggleAdjacentLights(light);
+
+            // Assert
+            toggle.Should()
+                .Throw<ArgumentException>().WithMessage(
+                    $"pressed light at position {light.PositionX}x{light.PositionY} is out of Sync");
         }
-        
+
         [Theory]
         [InlineData("5*5")]
         public void ToggleAdjacentLights_ShouldToggleAllAdjacentLights_WhenLightHasFourAdjacentLights(string dimensions)
@@ -110,7 +108,7 @@ namespace Infrastructure.UnitTests.Models
             // Act
             // Assert
         }
-        
+
         [Theory]
         [InlineData("5*5")]
         public void IsComplete_ShouldReturnTrue_WhenAllLightsAreOff(string dimensions)

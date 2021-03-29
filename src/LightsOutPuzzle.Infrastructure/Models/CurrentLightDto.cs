@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using LightsOutPuzzle.Domain.Interfaces;
-using LightsOutPuzzle.Domain.ValueObjects;
+﻿using LightsOutPuzzle.Domain.ValueObjects;
 using LightsOutPuzzle.Infrastructure.Interfaces;
 
 namespace LightsOutPuzzle.Infrastructure.Models
@@ -11,7 +9,7 @@ namespace LightsOutPuzzle.Infrastructure.Models
         public int PositionX { get; set; }
         public int PositionY { get; set; }
         public LightValue Value { get; set; }
-        
+
         public LightValue TurnOn()
         {
             return Value = LightValue.On;
