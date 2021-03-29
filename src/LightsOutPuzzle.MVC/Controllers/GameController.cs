@@ -1,0 +1,62 @@
+﻿using System;
+using System.Linq;
+using LightsOutPuzzle.Application.Interfaces;
+using LightsOutPuzzle.Domain.Entities;
+using LightsOutPuzzle.Domain.ValueObjects;
+using LightsOutPuzzle.MVC.Models;
+using LightsOutPuzzle.MVC.ViewModels;
+using Microsoft.AspNetCore.Mvc;
+
+namespace LightsOutPuzzle.MVC.Controllers
+{
+    public class GameController : Controller
+    {
+        private readonly ILightsPuzzleGameService _lightsPuzzleGameService;
+        
+        public GameController(ILightsPuzzleGameService lightsPuzzleGameService)
+        {
+            _lightsPuzzleGameService = lightsPuzzleGameService;
+        }
+        
+        public IActionResult StartGame()
+        {
+            try
+            {
+                var game = _lightsPuzzleGameService.StartNewGame("5x5");
+                var viewGame = MapToViewModel(game);
+                
+                return View(viewGame);
+
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        public IActionResult ToggleAdjacentLights(LightTogglePosition position)
+        {
+            return View();
+        }
+
+
+        private LightPuzzleGameViewModel MapToViewModel(Board board)
+        {
+            var viewLights = board.Lights.Select(cells => cells.Select(cell =>
+                    new LightViewModel()
+                    {
+                        IsOn = cell.Value == LightValue.On,
+                        PositionX = cell.PositionX,
+                        PositionY = cell.PositionY,
+                    }
+                )
+            );
+
+            return new LightPuzzleGameViewModel()
+            {
+                Lights = viewLights,
+                IsCompleted = board.IsCompleted
+            };
+        }
+    }
+}
