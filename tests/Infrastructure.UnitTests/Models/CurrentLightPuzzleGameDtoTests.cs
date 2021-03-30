@@ -105,7 +105,6 @@ namespace Infrastructure.UnitTests.Models
         }
 
         [Theory]
-        // Toggle all adjacent lights.
         [InlineData("5x5", new[] {2, 2}, new[] {-1, 0})]
         [InlineData("5x5", new[] {2, 2}, new[] {+1, 0})]
         [InlineData("5x5", new[] {2, 2}, new[] {0, +1})]
@@ -135,13 +134,44 @@ namespace Infrastructure.UnitTests.Models
             // Assert
             lightValueBeforeToggle.Should().Be(!lightValueAfterToggle);
         }
+        
+        [Theory]
+        [InlineData("5x5", new[] {2, 2}, new[] {-1, 0})]
+        [InlineData("5x5", new[] {2, 2}, new[] {+1, 0})]
+        [InlineData("5x5", new[] {2, 2}, new[] {0, +1})]
+        [InlineData("5x5", new[] {2, 2}, new[] {0, -1})]
+        public void ToggleLightRelativeTo_ShouldToggleLight_(string dimensions,
+            IList<int> lightPosition, IList<int> toggleDirection)
+
+        {
+            // Arrange
+            var sut = new CurrentLightPuzzleGameDto(dimensions);
+
+            var light = new CurrentLightDto
+            {
+                PositionX = lightPosition[0],
+                PositionY = lightPosition[1],
+                Value = sut.GetLight(lightPosition).Value
+            };
+
+            var lightForToggle = sut.GetLightRelative(lightPosition, toggleDirection);
+
+            var lightValueBeforeToggle = lightForToggle.IsOn();
+
+            // Act 
+            sut.ToggleLightRelativeTo(light, toggleDirection);
+
+            var lightValueAfterToggle = lightForToggle.IsOn();
+            // Assert
+            lightValueBeforeToggle.Should().Be(!lightValueAfterToggle);
+        }
 
         [Theory]
-        [InlineData("5x5", new[] {0, 2}, new[] {-1, 2})]
-        [InlineData("5x5", new[] {4, 2}, new[] {+1, 2})]
+        [InlineData("5x5", new[] {0, 2}, new[] {-1, 0})]
+        [InlineData("5x5", new[] {4, 2}, new[] {+1, 0})]
         [InlineData("5x5", new[] {2, 0}, new[] {0, -1})]
         [InlineData("5x5", new[] {4, 2}, new[] {0, +1})]
-        public void ToggleLightRelativeTo_ShouldDoNothing_WhenToggleTargetDoesNotExist(string dimensions,
+        public void ToggleLightRelativeTo_ShouldDoNothing_WhenToggleTargetIsNotOnBoard(string dimensions,
             IList<int> lightPosition, IList<int> toggleDirection)
 
         {
@@ -171,9 +201,6 @@ namespace Infrastructure.UnitTests.Models
         }
         
         
-        
-
-
         [Theory]
         [InlineData("5x5")]
         public void CheckIfComplete_ShouldReturnTrue_WhenAllLightsAreOff(string dimensions)

@@ -5,6 +5,7 @@ using LightsOutPuzzle.Domain.ValueObjects;
 
 namespace LightsOutPuzzle.Application.Service
 {
+    // TODO: Add save game feature
     public class LightsPuzzleGameService : ILightsPuzzleGameService
     {
         // private readonly ILightsPuzzleGameRepository _boardRepository;
@@ -17,6 +18,7 @@ namespace LightsOutPuzzle.Application.Service
             _currentGameRepository = currentGameRepository;
             // _boardRepository = boardRepository;
         }
+        
 
         public Board ToggleAdjacentLights(Cell light)
         {
