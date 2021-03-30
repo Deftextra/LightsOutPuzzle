@@ -1,18 +1,110 @@
 ﻿@model LightPuzzleGameViewModel
 
+<div id="game">
+    @foreach (var rowLights in Model.Lights)
+    {
+        <div class="row">
 
-@foreach (var rowLights in Model.Lights)
-{
-    <div class="row">
-        @foreach (var light in rowLights)
-        {
-            <a
-                class="light @(light.IsOn ? "isOn" : "isOff")"
-                asp-action="ToggleAdjacentLights"
-                asp-route-positionX="@(light.PositionX)"
-                asp-route-positionY="@(light.PositionY)"
-                asp-route-isOn="@(light.IsOn)">
-            </a>
+            @* @foreach (var light in rowLights) *@
+            @* { *@
+            @*     <a *@
+            @*         class="light @(light.IsOn ? "isOn" : "isOff")" *@
+            @*         asp-action="ToggleAdjacentLights" *@
+            @*         asp-route-positionX="@(light.PositionX)" *@
+            @*         asp-route-positionY="@(light.PositionY)" *@
+            @*         asp-route-isOn="@(light.IsOn)"> *@
+            @*     </a> *@
+            @* } *@
+            @foreach (var light in rowLights)
+            {
+                <button class="light @(light.IsOn ? "isOn" : "isOff")"></button>
+            }
+        </div>
+    }
+</div>
+
+<script>
+    const game = document.getElementById('game');
+
+    for (let positionY = 0; positionY < game.childElementCount; positionY++) {
+
+        for (let positionX = 0; positionX < game.children[positionY].childElementCount; positionX++) {
+            const light = game.children[positionY].children[positionX];
+            light.addEventListener('click', (event) => {
+                sendRequest(event.target, positionX, positionY);
+            });
         }
-    </div>
-}
+    }
+
+    function isOn(light) {
+        return light.classList.contains('isOn');
+    }
+
+    function turnOff(light) {
+        light.classList.remove('isOn');
+    }
+    function turnOn(light) {
+        if (!isOn(light))
+        {
+            light.classList.add('isOn');
+        }
+    }
+    
+    
+    function updateView(toggledView) {
+        
+        if (toggledView.isCompleted) {
+           game.classList.add('d-none') 
+           
+           const completedMessage = document.getElementById('completed-message');
+           
+           console.log(completedMessage);
+           completedMessage.classList.add('d-block');
+        }
+        
+        
+        for (let positionY = 0; positionY < game.childElementCount; positionY++) {
+            for (let positionX = 0; positionX < game.children[positionY].childElementCount; positionX++) {
+                const light = game.children[positionY].children[positionX];
+                
+                if (toggledView.lights[positionY][positionX].isOn) {
+                    turnOn(light);
+                } 
+                else {
+                    turnOff(light);
+                }
+            }
+        }
+    } 
+    
+    function cleanUp()
+    {
+        // Add some clean up logic when game has finished.
+    }
+    
+    function sendRequest(light, positionX, positionY) {
+        const sendItem = {
+            positionX: positionX,
+            positionY: positionY,
+            isOn: isOn(light)
+        };
+
+        $.ajax({
+            url: 'https://localhost:5001/game/ToggleAdjacentLights',
+            type: 'GET',
+            success: updateView,
+            error: function(error) {
+                console.log('error occured');
+            },
+            data: sendItem
+        })
+    }
+    
+</script>
+
+<style>
+    button {
+        flex: 1 1 0;
+        height: 5rem;
+    }
+</style>

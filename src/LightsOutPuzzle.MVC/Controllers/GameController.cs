@@ -33,7 +33,6 @@ namespace LightsOutPuzzle.MVC.Controllers
             }
         }
 
-        [HttpGet]
         public IActionResult ToggleAdjacentLights(LightTogglePosition position)
         {
             try
@@ -44,10 +43,11 @@ namespace LightsOutPuzzle.MVC.Controllers
                     PositionY = position.PositionY,
                     Value = position.IsOn ? LightValue.On : LightValue.Off
                 };
-
+            
                 var toggledBoard = _lightsPuzzleGameService.ToggleAdjacentLights(cell);
-
-                return View("Game", MapToViewModel(toggledBoard));
+            
+                // return View("Game", MapToViewModel(toggledBoard));
+                return Ok(MapToViewModel(toggledBoard));
             }
             catch (Exception ex)
             {

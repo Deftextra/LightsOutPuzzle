@@ -5,12 +5,32 @@
     Layout = "_Layout";
 }
 
+<h1 class="display-2 text-center">
+    Lights out puzzle
+</h1>
+
 @if (!Model.IsCompleted)
 {
     @await Html.PartialAsync("_PartialPuzzleBoard", Model)
 }
 else
 {
+    <div class="complete-message">
+        <p class="text-center">
+            <span class="display-1">
+                Congratulations!
+            </span>
+        </p>
+
+        <p class="text-center">
+            <span class="display-4">
+                You have successfully completed the game.
+            </span>
+        </p>
+    </div>
+}
+
+<div id="completed-message" class="d-none">
     <p class="text-center">
         <span class="display-1">
             Congratulations!
@@ -22,7 +42,7 @@ else
             You have successfully completed the game.
         </span>
     </p>
-}
+</div>
 
 <div class="row justify-content-center mt-2">
     <a class="giveUpButton col-2 text-center"
@@ -30,6 +50,7 @@ else
         Restart Game
     </a>
 </div>
+
 
 
 <style>
