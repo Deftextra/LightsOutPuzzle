@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using LightsOutPuzzle.Infrastructure.Models;
+using LightsOutPuzzle.Infrastructure.Repositories;
 using Xunit;
 
 namespace Infrastructure.UnitTests.Models
 {
+    // TODO: Add to readme board orientation.
     public class CurrentLightPuzzleGameDtoTests
     {
         [Theory]
@@ -101,21 +105,88 @@ namespace Infrastructure.UnitTests.Models
         }
 
         [Theory]
-        [InlineData("5*5")]
-        public void ToggleAdjacentLights_ShouldToggleAllAdjacentLights_WhenLightHasFourAdjacentLights(string dimensions)
+        // Toggle all adjacent lights.
+        [InlineData("5x5", new[] {2, 2}, new[] {-1, 0})]
+        [InlineData("5x5", new[] {2, 2}, new[] {+1, 0})]
+        [InlineData("5x5", new[] {2, 2}, new[] {0, +1})]
+        [InlineData("5x5", new[] {2, 2}, new[] {0, -1})]
+        public void ToggleLightRelativeTo_ShouldToggleLight_ToggleTargetExists(string dimensions,
+            IList<int> lightPosition, IList<int> toggleDirection)
+
         {
             // Arrange
-            // Act
+            var sut = new CurrentLightPuzzleGameDto(dimensions);
+
+            var light = new CurrentLightDto
+            {
+                PositionX = lightPosition[0],
+                PositionY = lightPosition[1],
+                Value = sut.GetLight(lightPosition).Value
+            };
+
+            var lightForToggle = sut.GetLightRelative(lightPosition, toggleDirection);
+
+            var lightValueBeforeToggle = lightForToggle.IsOn();
+
+            // Act 
+            sut.ToggleLightRelativeTo(light, toggleDirection);
+
+            var lightValueAfterToggle = lightForToggle.IsOn();
             // Assert
+            lightValueBeforeToggle.Should().Be(!lightValueAfterToggle);
         }
 
         [Theory]
-        [InlineData("5*5")]
-        public void IsComplete_ShouldReturnTrue_WhenAllLightsAreOff(string dimensions)
+        [InlineData("5x5", new[] {0, 2}, new[] {-1, 2})]
+        [InlineData("5x5", new[] {4, 2}, new[] {+1, 2})]
+        [InlineData("5x5", new[] {2, 0}, new[] {0, -1})]
+        [InlineData("5x5", new[] {4, 2}, new[] {0, +1})]
+        public void ToggleLightRelativeTo_ShouldDoNothing_WhenToggleTargetDoesNotExist(string dimensions,
+            IList<int> lightPosition, IList<int> toggleDirection)
+
         {
             // Arrange
-            // Act
+            var sut = new CurrentLightPuzzleGameDto(dimensions);
+
+            var toggleLight = new CurrentLightDto
+            {
+                PositionX = lightPosition[0],
+                PositionY = lightPosition[1],
+                Value = sut.GetLight(lightPosition).Value
+            };
+
+            var lightsBeforeToggle = sut.Lights.Select(row => row.Select(
+                light => new CurrentLightDto
+                {
+                    Id = light.Id,
+                    Value = light.Value,
+                    PositionX = light.PositionX,
+                    PositionY = light.PositionY
+                }));
+
+            // Act 
+            sut.ToggleLightRelativeTo(toggleLight, toggleDirection);
             // Assert
+            sut.Lights.Should().BeEquivalentTo(lightsBeforeToggle);
         }
+        
+        
+        
+
+
+        [Theory]
+        [InlineData("5x5")]
+        public void CheckIfComplete_ShouldReturnTrue_WhenAllLightsAreOff(string dimensions)
+        {
+            // Arrange
+            var sut = new CurrentLightPuzzleGameDto(dimensions);
+
+            // Act
+            sut.TurnAllLightsOff();
+            
+            // Assert
+            sut.CheckIfComplete().Should().BeTrue();
+        }
+        
     }
 }

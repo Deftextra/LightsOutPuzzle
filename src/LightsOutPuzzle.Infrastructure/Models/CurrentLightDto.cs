@@ -27,7 +27,12 @@ namespace LightsOutPuzzle.Infrastructure.Models
 
         public bool Toggle()
         {
-            return IsOn() ? TurnOff() == LightValue.Off : TurnOn() == LightValue.On;
+            if (IsOn())
+            {
+                return TurnOff() == LightValue.On;
+            }
+            
+            return TurnOn() == LightValue.On;
         }
     }
 }

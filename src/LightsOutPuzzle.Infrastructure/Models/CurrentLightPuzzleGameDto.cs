@@ -16,7 +16,6 @@ namespace LightsOutPuzzle.Infrastructure.Models
             PopulateLightBoard();
         }
 
-        private bool IsComplete { get; set; } = true;
         public int Id { get; set; }
         public string Dimension { get; set; }
         public int NumRows { get; private set; }
@@ -41,19 +40,76 @@ namespace LightsOutPuzzle.Infrastructure.Models
 
         public bool CheckIfComplete()
         {
+            var isComplete = true;
+
             foreach (var rowLights in Lights)
-            foreach (var light in rowLights)
             {
-                IsComplete &= !light.IsOn();
+                foreach (var light in rowLights)
+                {
+                    isComplete &= !light.IsOn();
+                }
             }
 
-            return IsComplete;
+            return isComplete;
         }
 
-
-        public void GiveUp()
+        public CurrentLightDto GetLightRelative(IList<int> position, IList<int> vector)
         {
-            throw new NotImplementedException();
+            // Note: In the future we might want to support multi dimensional boards.
+            if (vector.Count != 2 || position.Count > 2)
+            {
+                throw new ArgumentException("Vector must be two dimensional");
+            }
+
+            if (
+                lightPositionIsOnBoard(position)
+                && lightPositionIsOnBoard(AddTwoPosition(position, vector).ToList())
+            )
+            {
+                return Lights[position[1] + vector[1]][position[0] + vector[0]];
+            }
+
+            return null;
+        }
+
+        public CurrentLightDto GetLight(IList<int> position)
+        {
+            if (position.Count != 2)
+            {
+                throw new ArgumentException("Vector must be two dimensional");
+            }
+
+            // Note: This will throw an argument out of range exception if position is not on board.
+            return Lights[position[1]][position[0]];
+        }
+
+        public void ToggleLightRelativeTo(CurrentLightDto light, IList<int> vector)
+        {
+            // Note: In the future we might want to support multi dimensional boards.
+            if (vector.Count != 2)
+            {
+                throw new ArgumentException("Vector must be two dimensional");
+            }
+
+            var relativeLight = GetLightRelative(new List<int>
+                {
+                    light.PositionX,
+                    light.PositionY
+                },
+                vector);
+
+            relativeLight?.Toggle();
+        }
+
+        public void TurnAllLightsOff()
+        {
+            foreach (var lightsRow in Lights)
+            {
+                foreach (var light in lightsRow)
+                {
+                    light.TurnOff();
+                }
+            }
         }
 
         private void ParseDimensionalValue(string dimension)
@@ -99,7 +155,7 @@ namespace LightsOutPuzzle.Infrastructure.Models
         {
             if (light.PositionX != 0)
             {
-                Lights[light.PositionX - 1][light.PositionY].Toggle();
+                Lights[light.PositionY][light.PositionX - 1].Toggle();
             }
         }
 
@@ -107,7 +163,7 @@ namespace LightsOutPuzzle.Infrastructure.Models
         {
             if (light.PositionX != NumColumns - 1)
             {
-                Lights[light.PositionX + 1][light.PositionY].Toggle();
+                Lights[light.PositionY][light.PositionX + 1].Toggle();
             }
         }
 
@@ -115,7 +171,7 @@ namespace LightsOutPuzzle.Infrastructure.Models
         {
             if (light.PositionY != 0)
             {
-                Lights[light.PositionX][light.PositionY - 1].Toggle();
+                Lights[light.PositionY - 1][light.PositionX].Toggle();
             }
         }
 
@@ -123,34 +179,39 @@ namespace LightsOutPuzzle.Infrastructure.Models
         {
             if (light.PositionY != NumRows - 1)
             {
-                Lights[light.PositionX][light.PositionY + 1].Toggle();
+                Lights[light.PositionY + 1][light.PositionX].Toggle();
             }
         }
 
-        /// <summary>
-        ///     Any initial pattern of lights on is solvable.
-        ///     Therefore, we can create a random board.
-        ///     See https://en.wikipedia.org/wiki/Lights_Out_(game)
-        /// </summary>
-        /// <param name="positionX"></param>
-        /// <param name="positionY"></param>
-        /// <returns></returns>
         private CurrentLightDto CreateLightInRandomState(int positionX, int positionY)
         {
             var light = new CurrentLightDto();
             var rnd = new Random();
 
-            // Set position on the board.
             light.PositionX = positionX;
             light.PositionY = positionY;
 
-            // Toggle light Randomly.
             if (rnd.Next(0, 2) == 1)
             {
                 light.Toggle();
             }
 
             return light;
+        }
+
+        private bool lightPositionIsOnBoard(IList<int> lightPosition)
+        {
+            return lightPosition[0] > 0 && lightPosition[1] > 0 && lightPosition[0] < NumColumns &&
+                   lightPosition[1] < NumRows;
+        }
+
+        private IEnumerable<int> AddTwoPosition(IList<int> position1, IList<int> position2)
+        {
+            return new List<int>
+            {
+                position1[0] + position2[0],
+                position1[1] + position2[1]
+            };
         }
     }
 }

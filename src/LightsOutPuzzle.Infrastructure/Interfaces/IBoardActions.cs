@@ -6,6 +6,5 @@ namespace LightsOutPuzzle.Infrastructure.Interfaces
     {
         public void ToggleAdjacentLights(CurrentLightDto light);
         public bool CheckIfComplete();
-        public void GiveUp();
     }
 }

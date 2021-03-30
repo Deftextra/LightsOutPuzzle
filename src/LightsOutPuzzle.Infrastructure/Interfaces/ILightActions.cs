@@ -9,4 +9,5 @@ namespace LightsOutPuzzle.Infrastructure.Interfaces
         public bool Toggle();
         public bool IsOn();
     }
+    
 }

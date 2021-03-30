@@ -14,7 +14,7 @@ namespace Infrastructure.UnitTests.Models
             // Act
             light.TurnOn();
             // Assert
-            light.IsOn().Should().BeTrue();
+             light.IsOn().Should().BeTrue();
         }
 
         [Fact]
