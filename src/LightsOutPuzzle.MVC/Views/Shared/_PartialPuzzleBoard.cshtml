@@ -3,18 +3,7 @@
 <div id="game">
     @foreach (var rowLights in Model.Lights)
     {
-        <div class="row">
-
-            @* @foreach (var light in rowLights) *@
-            @* { *@
-            @*     <a *@
-            @*         class="light @(light.IsOn ? "isOn" : "isOff")" *@
-            @*         asp-action="ToggleAdjacentLights" *@
-            @*         asp-route-positionX="@(light.PositionX)" *@
-            @*         asp-route-positionY="@(light.PositionY)" *@
-            @*         asp-route-isOn="@(light.IsOn)"> *@
-            @*     </a> *@
-            @* } *@
+       <div class="row">
             @foreach (var light in rowLights)
             {
                 <button class="light @(light.IsOn ? "isOn" : "isOff")"></button>
@@ -51,6 +40,7 @@
     }
     
     
+    
     function updateView(toggledView) {
         
         if (toggledView.isCompleted) {
@@ -79,7 +69,13 @@
     
     function cleanUp()
     {
-        // Add some clean up logic when game has finished.
+        for (let positionY = 0; positionY < game.childElementCount; positionY++) {
+            for (let positionX = 0; positionX < game.children[positionY].childElementCount; positionX++) {
+                const light = game.children[positionY].children[positionX];
+                light.removeEventListener('click');
+            }
+        }
+       
     }
     
     function sendRequest(light, positionX, positionY) {
