@@ -1,9 +1,8 @@
 ![](https://github.com/Deftextra/LightsOutPuzzle/actions/workflows/dotnet.yml/badge.svg)
 # Lights Out Puzzle
 This is a simple implementation on the lights out game.
-See [wikipedia](https://en.wikipedia.org/wiki/Lights_Out_(game))  for more details:  
+See [wikipedia](https://en.wikipedia.org/wiki/Lights_Out_(game))  for more detail.
 
----
 # Development
 
 The solution is implemented using .NET 5 and asp.net MVC.
