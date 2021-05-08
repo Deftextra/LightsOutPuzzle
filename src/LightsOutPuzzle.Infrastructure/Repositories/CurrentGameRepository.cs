@@ -24,7 +24,6 @@ namespace LightsOutPuzzle.Infrastructure.Repositories
 
             _currentGame.ToggleAdjacentLights(currentLight);
             
-
             return MapToBoard();
         }
 

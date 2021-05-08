@@ -63,7 +63,6 @@ namespace LightsOutPuzzle.Infrastructure.Models
 
             var position = new List<int> {light.PositionX, light.PositionY};
             var relativePosition = AddTwoPosition(position, vector);
-            
 
             if (lightPositionIsOnBoard(position) 
                 && lightPositionIsOnBoard(relativePosition))
